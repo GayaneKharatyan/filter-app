@@ -3,6 +3,7 @@ import cv2
 import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
+import io
 
 def calculate_histogram(image):
     """Calculate the histogram for an image."""
@@ -157,3 +158,18 @@ if uploaded_image is not None:
     with col2:
         filtered_histogram = calculate_histogram(filtered_image)
         plot_histogram(filtered_histogram, "Filtered Image Histogram")
+
+    # Convert filtered image to PIL format for download
+    filtered_image_pil = Image.fromarray(filtered_image)
+
+    # Create a download button for the filtered image
+    buf = io.BytesIO()
+    filtered_image_pil.save(buf, format="PNG")
+    byte_im = buf.getvalue()
+
+    st.download_button(
+        label="Download Filtered Image",
+        data=byte_im,
+        file_name="filtered_image.png",
+        mime="image/png"
+    )
